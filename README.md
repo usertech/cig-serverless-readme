@@ -82,9 +82,9 @@ Access ``http://localhost:3000`` from your browser.You should see:
 Update generated serverless.yml with the following changes:
 
 
-Update ``provider`` section by adding :
+Update ``provider`` section by adding this, if your AWS user has permissions to create new roles :
 ```
-environment: #define env variable that can be referenced in the source code and configuration files
+  environment: #define env variable that can be referenced in the source code and configuration files
     TABLE_NAME: ${self:service}-${self:provider.stage}-ExampleTable
   iamRoleStatements: #define basic access rules for our dynamo DB
     - Effect: Allow
@@ -92,6 +92,15 @@ environment: #define env variable that can be referenced in the source code and 
         - dynamodb:GetItem
         - dynamodb:PutItem
       Resource: arn:aws:dynamodb:*:*:* #allow the operations listed above on all tables
+```
+
+or this, if your AWS user does not have rights to create new roles
+
+```
+  environment: #define env variable that can be referenced in the source code and configuration files
+      TABLE_NAME: ${self:service}-${self:provider.stage}-ExampleTable
+  role: arn:aws:iam::<account ID>:role/CIGLambdaTestRole # mandatory - if you omit this, your functions won't be able to reach dynamodb or S3
+  cfnRole: arn:aws:iam::<account ID>:role/CIGCloudFormationRole # mandatory - if you omit this, "serverless deploy" won't be able to create the cloudformation stack that creates the environment - it should have everything needed allowed, if you are unable to deploy, contact me
 ```
 
 Add ``custom`` section to define our offline DynamoDB :
