@@ -55,6 +55,16 @@ Install new DynamoDB through serverless:
 serverless dynamodb install
 ```
 
+Update aws region to that region that you have access to:
+```
+region: us-east-1
+```
+
+Update service name with the given prefix and suffix, for example
+```
+cig-aws-demo-app-andrew
+``` 
+
 ## Run Serverless offline
 ```
 ./node_modules/serverless/bin/serverless offline
